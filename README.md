@@ -1,5 +1,3 @@
-# test-task-list
-
 ## Project setup
 ```
 npm install
