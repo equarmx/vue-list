@@ -75,7 +75,9 @@ export default {
 
   }),
   mounted() {
-    this.$store.dispatch('getDetailUser', this.$route.params.id)
+    if (!this.doneData) {
+      this.$store.dispatch('getDetailUser', this.$route.params.id)
+    }
   },
   computed: {
     doneData() {
@@ -101,4 +103,5 @@ export default {
 <style lang="scss">
 @import "src/assets/styles/table";
 @import "src/assets/styles/detail";
+@import "src/assets/styles/customBtn";
 </style>

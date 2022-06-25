@@ -43,9 +43,9 @@ export default {
     ],
   }),
   mounted() {
-    this.$store.commit('changeCount', {
+    this.$store.commit('changeOptions', {
       value: '25',
-      name: '25',
+      prop: 'count',
     })
   },
   methods: {
@@ -53,7 +53,10 @@ export default {
       this.show = !this.show
     },
     onSelect(item) {
-      this.$store.commit('changeCount', item)
+      this.$store.commit('changeOptions', {
+        value: item.value,
+        prop: 'count'
+      })
       this.$store.dispatch('getListUsers')
       this.onShow()
     }

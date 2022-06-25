@@ -14,9 +14,6 @@
       <table class="table-container__wrapper__main eight_columns" v-if="!$store.state.loadingList">
         <thead class="table-container__wrapper__main__header">
         <tr>
-          <th class="table-container__wrapper__main__header__title">
-            <span class="table-container__wrapper__main__header__title__text">#</span>
-          </th>
           <th
               class="table-container__wrapper__main__header__title"
               v-for="(title, index) in titles"
@@ -33,7 +30,7 @@
           <tr
               v-for="(row, index) in $store.state.listUsers"
               :key="index"
-              @click="goToDetail(row.id.name)"
+              @click="goToDetail(row)"
           >
             <td>
               {{ index+1 }}
@@ -67,33 +64,7 @@
         <div class="table-container__wrapper__footer__counter">
           <span>Показано от {{ 1 }} до {{ 5 }} из {{ 5 }} записей</span>
         </div>
-        <div class="table-container__wrapper__footer__page">
-          <button
-              class="custom_button"
-          >
-            <img
-                :src="require('/src/assets/svg/Rectangle_33.svg')"
-                class="arrow-prev"
-                alt=""
-            >
-            <span>Предыдущая</span>
-          </button>
-          <button
-              class="custom_button"
-          >
-            {{1}}
-          </button>
-          <button
-              class="custom_button"
-          >
-            <span>Следующая</span>
-            <img
-                :src="require('/src/assets/svg/Rectangle_33.svg')"
-                class="arrow-next"
-                alt=""
-            >
-          </button>
-        </div>
+        <PaginationBtns/>
       </div>
     </div>
 </div>
@@ -102,14 +73,17 @@
 <script>
 import Loader from "../components/Loader";
 import Selector from "../components/Selector";
+import PaginationBtns from "../components/PaginationBtns";
 export default {
   name: 'Home',
   components: {
+    PaginationBtns,
     Selector,
     Loader
   },
   data: () => ({
     titles: [
+      {name: '#'},
       {name: 'Имя'},
       {name: 'Фамилия'},
       {name: 'Возраст'},
@@ -118,12 +92,6 @@ export default {
       {name: 'Страна'},
       {name: 'Город'},
     ],
-
-    options: {
-      page: 1,
-      count: 100,
-      sort: 'abc',
-    },
   }),
   mounted() {
     this.$store.dispatch('getListUsers')
@@ -132,22 +100,25 @@ export default {
     dateOfBirth(date) {
       return new Date(date).toJSON().slice(0,10).split('-').reverse().join('/');
     },
-    goToDetail(id) {
-      if (id) {
-        this.$router.push({
-          path: `/users/${id}`
-        })
-      } else {
-        /**
-         * Не у всех объектов из фейковой даты есть id
-         * https://randomuser.me/documentation
-         * + смотри комментарий в request.js
-        **/
-        const random = (Math.random() + 1).toString(36).substring(7)
-        this.$router.push({
-          path: `/users/${random}`
-        })
-      }
+    goToDetail(user) {
+      /**
+       * Не у всех объектов из фейковой даты есть id
+       * https://randomuser.me/documentation
+       * + смотри комментарий в request.js
+       **/
+
+      const id = user.id.name ? user.id.name : (Math.random() + 1).toString(36).substring(7)
+
+      /**
+       * ВАЖНО! Изначально собирался получать детальную информацию по API https://randomuser.me/?id=1 e.g.
+       * НО у этой фейковой даты нет такой возможности, поэтому чтобы решить поставленную задачу, буду прокидывать дату из таблички напрямую
+       **/
+
+      this.$store.commit('changeUserInfo', user)
+
+      this.$router.push({
+        path: `/users/${id}`
+      })
     },
   },
 }

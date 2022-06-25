@@ -27,9 +27,9 @@ export default new Vuex.Store({
       state.userInfo = {}
       state.userInfo = object
     },
-    changeCount(state, data) {
-      const {value} = data
-      state.options.count = value
+    changeOptions(state, data) {
+      const {prop, value} = data
+      state.options[prop] = value
     },
   },
   actions: {
