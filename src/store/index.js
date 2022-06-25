@@ -10,6 +10,10 @@ export default new Vuex.Store({
     loadingList: false,
     listUsers: [],
     userInfo: {},
+    options: {
+      count: 25,
+      page: 1,
+    }
   },
   mutations: {
     changeListUsers(state, array) {
@@ -23,25 +27,27 @@ export default new Vuex.Store({
       state.userInfo = {}
       state.userInfo = object
     },
+    changeCount(state, data) {
+      const {value} = data
+      state.options.count = value
+    },
   },
   actions: {
-    async getListUsers({commit}, params) {
+    async getListUsers({state, commit}) {
       commit('changeLoadingList', true)
 
-      const result = await getUsers(params)
-
-      console.log(result)
-
+      const result = await getUsers(state.options)
       commit('changeListUsers', result)
+
+      commit('changeLoadingList', false)
     },
     async getDetailUser({commit}, id) {
       commit('changeLoadingList', true)
 
       const result = await getDetailUser(id)
-
-      console.log(result)
-
       commit('changeUserInfo', result)
+
+      commit('changeLoadingList', false)
     },
   },
   modules: {

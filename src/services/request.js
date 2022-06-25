@@ -21,10 +21,11 @@ export async function getDetailUser(id) {
     try {
         /**
          * У сервиса по фейковой дате нет ендпоинта по детальному пользователю (через id или любое другое свойство)
+         * https://randomuser.me/documentation
          * поэтому в детальной карточке всегда генерируется случайный пользователь, но будем имитировать вид, что работает так как должно
         **/
         const result = await axiosClient.get(`?id=${id}`)
-        return result.data.results
+        return result.data.results[0]
     } catch (error) {
         return error
     }

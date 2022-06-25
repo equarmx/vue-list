@@ -13,6 +13,9 @@
     padding: 30px;
     flex: 1;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 
     &__header {
       display: flex;
@@ -115,8 +118,9 @@
   }
 }
 
-.seven_columns {
+.eight_columns {
   grid-template-columns:
+        minmax(20px, 0.5fr)
         minmax(60px, 1.67fr)
         minmax(75px, 1.67fr)
         minmax(70px, 1fr)
@@ -124,4 +128,36 @@
         minmax(80px, 2fr)
         minmax(60px, 1.67fr)
         minmax(60px, 2fr)
+}
+
+.custom_input {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+  max-width: 160px;
+  outline: none;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  background: #f9f9f9;
+  transition: background 0.25s, border-color 0.25s, color 0.25s;
+  padding: 5px;
+  &:focus {
+    background: #ffffff;
+  }
+  &::placeholder {
+    color: #bbbbbb;
+  }
+}
+
+.arrow-prev {
+  width: 14px;
+  height: 14px;
+  transform: rotate(90deg);
+  padding-top: 10px;
+}
+.arrow-next {
+  width: 14px;
+  height: 14px;
+  transform: rotate(-90deg);
+  padding-top: 10px;
 }

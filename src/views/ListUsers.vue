@@ -4,18 +4,19 @@
       <div class="table-container__wrapper__header">
         <div class="table-container__wrapper__header__views">
           Показать
-          <select
-          ></select>
+          <Selector/>
           записей
         </div>
         <div class="table-container__wrapper__header__search">
-          Поиск:
-          <input>
+          <input class="custom_input" placeholder="Поиск...">
         </div>
       </div>
-      <table class="table-container__wrapper__main seven_columns">
+      <table class="table-container__wrapper__main eight_columns" v-if="!$store.state.loadingList">
         <thead class="table-container__wrapper__main__header">
         <tr>
+          <th class="table-container__wrapper__main__header__title">
+            <span class="table-container__wrapper__main__header__title__text">#</span>
+          </th>
           <th
               class="table-container__wrapper__main__header__title"
               v-for="(title, index) in titles"
@@ -35,6 +36,9 @@
               @click="goToDetail(row.id.name)"
           >
             <td>
+              {{ index+1 }}
+            </td>
+            <td>
               {{ row.name.first }}
             </td>
             <td>
@@ -44,7 +48,7 @@
               {{ row.dob.age }}
             </td>
             <td>
-              {{ row.dob.date }}
+              {{ dateOfBirth(row.dob.date) }}
             </td>
             <td>
               {{ row.cell }}
@@ -58,28 +62,36 @@
           </tr>
         </tbody>
       </table>
+      <Loader v-else/>
       <div class="table-container__wrapper__footer">
         <div class="table-container__wrapper__footer__counter">
           <span>Показано от {{ 1 }} до {{ 5 }} из {{ 5 }} записей</span>
         </div>
         <div class="table-container__wrapper__footer__page">
           <button
+              class="custom_button"
           >
-<!--            <v-icon small>-->
-<!--              mdi-chevron-left-->
-<!--            </v-icon>-->
+            <img
+                :src="require('/src/assets/svg/Rectangle_33.svg')"
+                class="arrow-prev"
+                alt=""
+            >
             <span>Предыдущая</span>
           </button>
           <button
+              class="custom_button"
           >
             {{1}}
           </button>
           <button
+              class="custom_button"
           >
             <span>Следующая</span>
-<!--            <v-icon small>
-              mdi-chevron-right
-            </v-icon>-->
+            <img
+                :src="require('/src/assets/svg/Rectangle_33.svg')"
+                class="arrow-next"
+                alt=""
+            >
           </button>
         </div>
       </div>
@@ -88,9 +100,13 @@
 </template>
 
 <script>
+import Loader from "../components/Loader";
+import Selector from "../components/Selector";
 export default {
   name: 'Home',
   components: {
+    Selector,
+    Loader
   },
   data: () => ({
     titles: [
@@ -110,9 +126,12 @@ export default {
     },
   }),
   mounted() {
-    this.$store.dispatch('getListUsers', this.options)
+    this.$store.dispatch('getListUsers')
   },
   methods: {
+    dateOfBirth(date) {
+      return new Date(date).toJSON().slice(0,10).split('-').reverse().join('/');
+    },
     goToDetail(id) {
       if (id) {
         this.$router.push({
@@ -121,6 +140,7 @@ export default {
       } else {
         /**
          * Не у всех объектов из фейковой даты есть id
+         * https://randomuser.me/documentation
          * + смотри комментарий в request.js
         **/
         const random = (Math.random() + 1).toString(36).substring(7)
@@ -135,5 +155,5 @@ export default {
 
 <style lang="scss">
 @import "src/assets/styles/table";
-
+@import "src/assets/styles/customBtn";
 </style>
