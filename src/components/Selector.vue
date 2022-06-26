@@ -57,6 +57,20 @@ export default {
         value: item.value,
         prop: 'count'
       })
+
+      /**
+       * Если после изменения количества показываемых записей их становится больше чем у нас установлено,
+       * то переходим на последнюю страницу списка
+      **/
+      const store = this.$store.state
+      if (store.options.count * store.options.page >= store.maxUsers) {
+        const newPage = Math.floor(store.maxUsers/store.options.count)
+        this.$store.commit('changeOptions', {
+          value: newPage,
+          prop: 'page'
+        })
+      }
+
       this.$store.dispatch('getListUsers')
       this.onShow()
     }

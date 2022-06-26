@@ -33,7 +33,7 @@
               @click="goToDetail(row)"
           >
             <td>
-              {{ index+1 }}
+              {{ startList+index}}
             </td>
             <td>
               {{ row.name.first }}
@@ -61,9 +61,7 @@
       </table>
       <Loader v-else/>
       <div class="table-container__wrapper__footer">
-        <div class="table-container__wrapper__footer__counter">
-          <span>Показано от {{ 1 }} до {{ 5 }} из {{ 5 }} записей</span>
-        </div>
+        <CountItems/>
         <PaginationBtns/>
       </div>
     </div>
@@ -74,9 +72,11 @@
 import Loader from "../components/Loader";
 import Selector from "../components/Selector";
 import PaginationBtns from "../components/PaginationBtns";
+import CountItems from "../components/CountItems";
 export default {
   name: 'Home',
   components: {
+    CountItems,
     PaginationBtns,
     Selector,
     Loader
@@ -95,6 +95,11 @@ export default {
   }),
   mounted() {
     this.$store.dispatch('getListUsers')
+  },
+  computed: {
+    startList() {
+      return (this.$store.state.options.page-1) * this.$store.state.options.count + 1
+    },
   },
   methods: {
     dateOfBirth(date) {

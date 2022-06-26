@@ -20,6 +20,7 @@
     <button
         class="custom_button"
         @click="changePage('plus')"
+        :class="{disabled: endList}"
     >
       <span>Следующая</span>
       <img
@@ -40,39 +41,37 @@ export default {
   computed: {
     endedPage() {
       return this.$store.state.options.page <= 1
+    },
+    endList() {
+      return this.$store.state.options.page * this.$store.state.options.count >= 500
     }
   },
   methods: {
     changePage(action) {
       const page = this.$store.state.options.page
 
-      if (action === 'plus') {
-        if (!page) {
-          this.$store.commit('changeOptions', {
-            value: 1,
-            prop: 'page',
-          })
-        } else {
+      if (!page) {
+        this.$store.commit('changeOptions', {
+          value: 1,
+          prop: 'page',
+        })
+      } else {
+        if (action === 'plus') {
           this.$store.commit('changeOptions', {
             value: parseInt(page)+1,
             prop: 'page',
           })
-        }
-      } else {
-        if (!page) {
-          this.$store.commit('changeOptions', {
+        } else {
+          if (parseInt(page) > 0) {
+            this.$store.commit('changeOptions', {
+              value: parseInt(page)-1,
+              prop: 'page',
+            })
+          } else this.$store.commit('changeOptions', {
             value: 1,
             prop: 'page',
           })
-        } else if (parseInt(page) > 0) {
-          this.$store.commit('changeOptions', {
-            value: parseInt(page)-1,
-            prop: 'page',
-          })
-        } else this.$store.commit('changeOptions', {
-          value: 1,
-          prop: 'page',
-        })
+        }
       }
 
       this.$store.dispatch('getListUsers')

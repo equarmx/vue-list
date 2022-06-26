@@ -13,7 +13,8 @@ export default new Vuex.Store({
     options: {
       count: 25,
       page: 1,
-    }
+    },
+    maxUsers: 500,
   },
   mutations: {
     changeListUsers(state, array) {
