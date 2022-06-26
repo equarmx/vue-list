@@ -16,7 +16,7 @@
         <tr>
           <th
               class="table-container__wrapper__main__header__title"
-              v-for="(title, index) in titles"
+              v-for="(title, index) in refactoredTitles"
               :key="index"
               data-type="text-short"
           >
@@ -32,7 +32,7 @@
               :key="index"
               @click="goToDetail(row)"
           >
-            <td>
+            <td v-if="!isMobile">
               {{ startList+index}}
             </td>
             <td>
@@ -44,16 +44,16 @@
             <td>
               {{ row.dob.age }}
             </td>
-            <td>
+            <td v-if="!isMobile">
               {{ dateOfBirth(row.dob.date) }}
             </td>
-            <td>
+            <td v-if="!isMobile">
               {{ row.cell }}
             </td>
-            <td>
+            <td v-if="!isMobile">
               {{ row.location.country }}
             </td>
-            <td>
+            <td v-if="!isMobile">
               {{ row.location.city }}
             </td>
           </tr>
@@ -97,9 +97,19 @@ export default {
     this.$store.dispatch('getListUsers')
   },
   computed: {
+    refactoredTitles() {
+      if (this.isMobile) {
+        return this.titles.filter(title => {
+          return title.name === 'Имя' || title.name === 'Фамилия' || title.name === 'Возраст'
+        })
+      } else return this.titles
+    },
     startList() {
       return (this.$store.state.options.page-1) * this.$store.state.options.count + 1
     },
+    isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
   },
   methods: {
     dateOfBirth(date) {
